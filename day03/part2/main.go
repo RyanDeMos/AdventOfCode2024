@@ -36,38 +36,38 @@ func read_input(inputFile string) []string {
 }
 
 func part2(lines []string) int {
-	lines_after_removal := remove_donts(lines)
+	single_line := convert_input_to_single_line(lines)
+	lines_after_removal := remove_donts(single_line)
 	mults := mults(lines_after_removal)
 	total := find_total(mults)
 	return total
 }
 
-func mults(lines []string) []int {
-	r, err := regexp.Compile(`.*mul\((\d\d?\d?,\d\d?\d?)\).*`)
+func mults(line string) []int {
+	r, err := regexp.Compile(`mul\((\d\d?\d?,\d\d?\d?)\)`)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	mults := []int{}
-	for _, line := range lines {
-		for r.MatchString(line) {
-			// Find an occurence and turn it into integers
-			matching_numbers_string := r.FindStringSubmatch(line)[1]
-			matching_numbers_list := strings.Split(matching_numbers_string, ",")
-			number_1, err := strconv.Atoi(matching_numbers_list[0])
-			if err != nil {
-				log.Fatal(err)
-			}
-			number_2, err := strconv.Atoi(matching_numbers_list[1])
-			if err != nil {
-				log.Fatal(err)
-			}
-			mults = append(mults, number_1*number_2)
 
-			// Remove this occurence from the string
-			match_indexes := r.FindStringSubmatchIndex(line)
-			line = line[0:match_indexes[2]] + line[match_indexes[3]:]
+	for r.MatchString(line) {
+		// Find an occurence and turn it into integers
+		matching_numbers_string := r.FindStringSubmatch(line)[1]
+		matching_numbers_list := strings.Split(matching_numbers_string, ",")
+		number_1, err := strconv.Atoi(matching_numbers_list[0])
+		if err != nil {
+			log.Fatal(err)
 		}
+		number_2, err := strconv.Atoi(matching_numbers_list[1])
+		if err != nil {
+			log.Fatal(err)
+		}
+		mults = append(mults, number_1*number_2)
+
+		// Remove this occurence from the string
+		match_indexes := r.FindStringSubmatchIndex(line)
+		line = line[0:match_indexes[2]] + line[match_indexes[3]:]
 	}
 	return mults
 }
@@ -80,7 +80,15 @@ func find_total(mults []int) int {
 	return total
 }
 
-func remove_donts(lines []string) []string {
+func convert_input_to_single_line(lines []string) string {
+	single_line := ""
+	for _, line := range lines {
+		single_line += line
+	}
+	return single_line
+}
+
+func remove_donts(line string) string {
 	donts, err := regexp.Compile(`don't\(\)`)
 	if err != nil {
 		log.Fatal(err)
@@ -91,13 +99,13 @@ func remove_donts(lines []string) []string {
 		log.Fatal(err)
 	}
 
-	match_all_donts := donts.FindAllStringSubmatchIndex(lines[0], -1)
-	match_all_dos := dos.FindAllStringSubmatchIndex(lines[0], -1)
+	match_all_donts := donts.FindAllStringSubmatchIndex(line, -1)
+	match_all_dos := dos.FindAllStringSubmatchIndex(line, -1)
 
-	sections_to_remove := [][]int{}
+	substrings_to_remove := []string{}
 	for dont_index, dont := range match_all_donts {
 		remove_start := dont[0]
-		remove_end := len(lines[0])
+		remove_end := len(line)
 		for _, do := range match_all_dos {
 			if do[0] > dont[0] {
 				remove_end = do[0]
@@ -107,17 +115,12 @@ func remove_donts(lines []string) []string {
 				break
 			}
 		}
-		sections_to_remove = append(sections_to_remove, []int{remove_start, remove_end})
-	}
-
-	substrings_to_remove := []string{}
-	for _, remove_range := range sections_to_remove {
-		substrings_to_remove = append(substrings_to_remove, lines[0][remove_range[0]:remove_range[1]])
+		substrings_to_remove = append(substrings_to_remove, line[remove_start:remove_end])
 	}
 
 	for _, substring := range substrings_to_remove {
-		lines[0] = strings.ReplaceAll(lines[0], substring, "")
+		line = strings.ReplaceAll(line, substring, "")
 	}
 
-	return []string{lines[0]}
+	return line
 }
