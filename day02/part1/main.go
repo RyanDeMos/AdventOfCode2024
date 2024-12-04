@@ -60,7 +60,7 @@ func is_safe(report []int) bool {
 
 func is_safe_descending(report []int) bool {
 	for i := 0; i < len(report)-1; i++ {
-		if (report[i] < report[i+1]) || (math.Abs(float64(report[i]-report[i+1])) < 1) || (math.Abs(float64(report[i]-report[i+1])) > 3) {
+		if (report[i] < report[i+1]) || report[i] == report[i+1] || (math.Abs(float64(report[i]-report[i+1])) > 3) {
 			return false
 		}
 	}
@@ -69,7 +69,7 @@ func is_safe_descending(report []int) bool {
 
 func is_safe_ascending(report []int) bool {
 	for i := 0; i < len(report)-1; i++ {
-		if (report[i] > report[i+1]) || (math.Abs(float64(report[i]-report[i+1])) < 1) || (math.Abs(float64(report[i]-report[i+1])) > 3) {
+		if (report[i] > report[i+1]) || report[i] == report[i+1] || (math.Abs(float64(report[i]-report[i+1])) > 3) {
 			return false
 		}
 	}
