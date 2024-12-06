@@ -76,7 +76,7 @@ func (g *guard) move_guard(lines []string) {
 		position{0, 1}:  position{-1, 0},
 		position{-1, 0}: position{0, -1},
 	}
-	for g.current_pos.y+g.direction_of_travel.y < len(lines) && g.current_pos.x+g.direction_of_travel.x < len(lines[g.current_pos.y+g.direction_of_travel.y]) && g.current_pos.y+g.direction_of_travel.y >= 0 && g.current_pos.x+g.direction_of_travel.x >= 0 {
+	for g.current_pos.y+g.direction_of_travel.y >= 0 && g.current_pos.x+g.direction_of_travel.x >= 0 && g.current_pos.y+g.direction_of_travel.y < len(lines) && g.current_pos.x+g.direction_of_travel.x < len(lines[g.current_pos.y+g.direction_of_travel.y]) {
 		next_position := lines[g.current_pos.y+g.direction_of_travel.y][g.current_pos.x+g.direction_of_travel.x]
 		// log.Printf("Next Position: %v\n", string(next_position))
 		if string(next_position) == "#" {
