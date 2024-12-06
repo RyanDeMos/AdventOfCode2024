@@ -63,7 +63,7 @@ func find_guard(lines []string) guard {
 						y: row,
 					},
 					direction_of_travel: position{0, -1},
-					locations_visited:   map[position]position{{column, row}: position{0, -1}},
+					locations_visited:   map[position]position{{column, row}: {0, -1}},
 				}
 			}
 		}
@@ -76,10 +76,10 @@ func find_guard(lines []string) guard {
 func (g *guard) move_guard(lines []string) int {
 	//map[current direction]new direction 90 deg clockwise
 	next_direction_map := map[position]position{
-		position{0, -1}: position{1, 0},
-		position{1, 0}:  position{0, 1},
-		position{0, 1}:  position{-1, 0},
-		position{-1, 0}: position{0, -1},
+		{0, -1}: {1, 0},
+		{1, 0}:  {0, 1},
+		{0, 1}:  {-1, 0},
+		{-1, 0}: {0, -1},
 	}
 	for g.current_pos.y+g.direction_of_travel.y >= 0 && g.current_pos.x+g.direction_of_travel.x >= 0 && g.current_pos.y+g.direction_of_travel.y < len(lines) && g.current_pos.x+g.direction_of_travel.x < len(lines[g.current_pos.y+g.direction_of_travel.y]) {
 		next_position := lines[g.current_pos.y+g.direction_of_travel.y][g.current_pos.x+g.direction_of_travel.x]
