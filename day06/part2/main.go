@@ -2,8 +2,10 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
+	"time"
 )
 
 type position struct {
@@ -16,11 +18,19 @@ type guard struct {
 	locations_visited   map[position]position
 }
 
+func Timer() func() {
+	start := time.Now()
+	return func() {
+		fmt.Printf("took %v\n", time.Since(start))
+	}
+}
+
 func main() {
 	example_input := read_input("./day06/part2/inputs/example_input.txt")
 	example_total := part2(example_input)
 	log.Printf("Example total: %v\n", example_total)
 
+	defer Timer()()
 	input := read_input("./day06/part2/inputs/input.txt")
 	total := part2(input)
 	log.Printf("Total: %v\n", total)
