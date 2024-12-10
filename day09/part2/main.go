@@ -24,6 +24,16 @@ func main() {
 	input := read_input("./day09/part2/inputs/input.txt")
 	total := part2(input)
 	log.Printf("Total: %v\n", total)
+
+	defer Timer()()
+	input2 := read_input("./day09/part2/inputs/hard_input.txt")
+	total2 := part2(input2)
+	log.Printf("Total: %v\n", total2)
+
+	// defer Timer()()
+	// input3 := read_input("./day09/part2/inputs/really_evil_input.txt")
+	// total3 := part2(input3)
+	// log.Printf("Total: %v\n", total3)
 }
 
 func read_input(inputFile string) []string {
@@ -42,12 +52,9 @@ func read_input(inputFile string) []string {
 }
 
 func part2(lines []string) int64 {
-	line := lines[0] //Input is always one line
-	// log.Printf("Line: %v\n", line)
+	line := lines[0]
 	blocks := input_to_blocks(line)
-	// log.Printf("Blocks:\n %v\n", blocks)
 	after_move_blocks := move_blocks(blocks)
-	// log.Printf("After move Blocks:\n %v\n", after_move_blocks)
 	checksum := calculate_checksum(after_move_blocks)
 	return checksum
 }
@@ -68,7 +75,6 @@ func input_to_blocks(line string) []int {
 }
 
 func move_blocks(blocks []int) []int {
-	// after_move := []int{}
 	idx_to_move := len(blocks) - 1
 	for blocks[idx_to_move] == -1 {
 		idx_to_move--
@@ -90,32 +96,21 @@ func move_blocks(blocks []int) []int {
 	for i := len(blocks) - 1; i >= 0; i-- {
 		if blocks[i] != current_block_int {
 			if current_block_int != -1 {
-				// Go through original blocks and find first place this block fits
 				starting_fill_index := find_fill_block(after_move, current_block_length)
-				// log.Printf("Starting index: %v\n", starting_fill_index)
 				if starting_fill_index != -1 && starting_fill_index < i {
-					// Replace fill block
 					for j := starting_fill_index; j < starting_fill_index+current_block_length; j++ {
 						after_move[j] = current_block_int
 					}
-
-					// Go through copy and remove numbers
 					for j := i + 1; j < i+1+current_block_length; j++ {
 						after_move[j] = -2
 					}
 				}
-				// log.Printf("After single movement:\n %v\n", after_move)
-
 			}
-
-			// Switch to new value
 			current_block_int = blocks[i]
 			current_block_length = 1
 		} else {
 			current_block_length += 1
 		}
-		// log.Printf("Current Int: %v\n", current_block_int)
-		// log.Printf("Current Length: %v\n", current_block_length)
 	}
 	return after_move
 }
