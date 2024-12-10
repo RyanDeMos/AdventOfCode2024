@@ -39,9 +39,7 @@ func read_input(inputFile string) []string {
 func part1(lines []string) int {
 	lines_as_ints := transform_input_to_int_array(lines)
 	trailheads := find_trailheads(lines_as_ints)
-	log.Printf("Trailheads: %v\n", trailheads)
 	orders := find_orders(lines_as_ints, trailheads)
-	log.Printf("Orders: %v\n", orders)
 	return find_total(orders)
 }
 
@@ -81,7 +79,6 @@ func find_orders(lines [][]int, trailheads []position) []int {
 		}
 		for i := 1; i <= 9; i++ {
 			new_surrounding := map[position]bool{}
-			// log.Printf("Locations of %d: %v\n", i-1, new_surrounding)
 			for location := range all_surrounding {
 				next_location := find_surrounding(lines, location, i)
 				for new_location := range next_location {
@@ -89,7 +86,6 @@ func find_orders(lines [][]int, trailheads []position) []int {
 				}
 			}
 			all_surrounding = new_surrounding
-			log.Printf("Locations of %d: %v\n", i, all_surrounding)
 		}
 		orders = append(orders, len(all_surrounding))
 	}
