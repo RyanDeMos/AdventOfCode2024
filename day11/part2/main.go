@@ -63,18 +63,15 @@ func follow_rules(stones []int) int {
 	for i := 0; i < 75; i++ {
 		new_stone_map := map[int]int{}
 		for stone, count := range total_stone_map {
-			after_changes := []int{}
 			if stone == 0 {
-				after_changes = append(after_changes, int(1))
+				new_stone_map[1] += count
 			} else if digits := strconv.Itoa(int(stone)); len(digits)%2 == 0 {
 				first_digits, _ := strconv.Atoi(digits[:len(digits)/2])
 				second_digits, _ := strconv.Atoi(digits[len(digits)/2:])
-				after_changes = append(after_changes, first_digits, second_digits)
+				new_stone_map[first_digits] += count
+				new_stone_map[second_digits] += count
 			} else {
-				after_changes = append(after_changes, stone*2024)
-			}
-			for _, new_stones := range after_changes {
-				new_stone_map[new_stones] += count
+				new_stone_map[stone*2024] += count
 			}
 		}
 		total_stone_map = new_stone_map
